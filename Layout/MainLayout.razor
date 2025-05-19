@@ -12,14 +12,14 @@
 {
     protected override void OnInitialized()
     {
-        var userRole = "Admin";
+        var userRole = "User";
         if (userRole == "Admin")
         {
             Nav.NavigateTo("/admin-home");
         }
         else if (userRole == "User")
         {
-            Nav.NavigateTo("/user");
+            Nav.NavigateTo("/user-home");
         }
     }
 }
