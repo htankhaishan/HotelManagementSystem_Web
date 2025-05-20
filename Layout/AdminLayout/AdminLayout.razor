@@ -1,5 +1,102 @@
 ﻿@inherits LayoutComponentBase
-<div>
-    <h1>Admin Layout Working</h1>
-    @Body
+
+@code {
+    private bool isSidebarVisible = true;
+
+    private void ToggleSidebar()
+    {
+        isSidebarVisible = !isSidebarVisible;
+    }
+}
+
+<style>
+    .bg-pink {
+        background-color: #fff;
+    }
+
+    .text-pink {
+        color: #e83e8c;
+    }
+
+    .sidebar-hidden {
+        display: none !important;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .sidebar-toggle {
+        cursor: pointer;
+        font-size: 1.5rem;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="@($"col-md-2 d-none d-md-block bg-pink border-end border-2 border-secondary min-vh-100 rounded-3 {(isSidebarVisible ? "" : "sidebar-hidden")}")">
+            <div class="position-sticky pt-3">
+                <div class="sidebar-header px-3 mb-3">
+                    <h5 class="text-pink">HMS</h5>
+                    <!-- Hamburger menu to toggle sidebar -->
+                    <i class="bi bi-list sidebar-toggle d-md-none" @onclick="ToggleSidebar"></i>
+                </div>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <NavLink class="nav-link text-secondary border-bottom m-2" href="/booking">Booking</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link text-secondary border-bottom m-2" href="/guest">Guest</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link text-secondary border-bottom m-2" href="/room">Room</NavLink>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="@(isSidebarVisible ? "col-md-10 col-12" : "col-12") px-4">
+            <!-- Top bar with hamburger menu (always visible on mobile, optional on desktop) -->
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                <button class="btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+                    <i class="bi bi-list fs-3 text-pink"></i>
+                </button>
+
+                <!-- Desktop toggle button (optional) -->
+                <button class="btn d-none d-md-inline-block" @onclick="ToggleSidebar">
+                    <i class="bi bi-list text-pink fs-4"></i>
+                </button>
+            </div>
+
+            <article>
+                <div class="py-2">@Body</div>
+            </article>
+        </main>
+    </div>
+</div>
+
+<!-- Mobile Sidebar -->
+<div class="offcanvas offcanvas-start bg-white border-end border-2 border-secondary" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title text-pink" id="mobileSidebarLabel">HMS</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <NavLink class="nav-link text-secondary border-bottom" href="/booking">Booking</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link text-secondary border-bottom" href="/guest">Guest</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link text-secondary border-bottom" href="/room">Room</NavLink>
+            </li>
+        </ul>
+    </div>
 </div>
