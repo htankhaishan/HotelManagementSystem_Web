@@ -1,101 +1,120 @@
 ﻿@inherits LayoutComponentBase
 
 @code {
-    private bool isSidebarVisible = true;
+    private bool isSidebarCollapsed = false;
 
     private void ToggleSidebar()
     {
-        isSidebarVisible = !isSidebarVisible;
+        isSidebarCollapsed = !isSidebarCollapsed;
     }
 }
 
 <style>
-    .bg-pink {
+    .sidebar {
         background-color: #fff;
+        border-right: 2px solid #6c757d;
+        min-height: 100vh;
+        transition: width 0.3s;
     }
+
+        .sidebar.collapsed {
+            width: 70px !important;
+            overflow-x: hidden;
+        }
+
+        .sidebar.expanded {
+            width: 220px !important;
+        }
+
+        .sidebar .nav-link {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
     .text-pink {
         color: #e83e8c;
-    }
-
-    .sidebar-hidden {
-        display: none !important;
     }
 
     .sidebar-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 1rem;
     }
 
-    .sidebar-toggle {
-        cursor: pointer;
+    .toggle-btn {
+        background: none;
+        border: none;
         font-size: 1.5rem;
+        cursor: pointer;
+        color: #e83e8c;
+    }
+
+    .main-content {
+        transition: margin-left 0.3s;
     }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="@($"col-md-2 d-none d-md-block bg-pink border-end border-2 border-secondary min-vh-100 rounded-3 {(isSidebarVisible ? "" : "sidebar-hidden")}")">
-            <div class="position-sticky pt-3">
-                <div class="sidebar-header px-3 mb-3">
-                    <h5 class="text-pink">HMS</h5>
-                    <!-- Hamburger menu to toggle sidebar -->
-                    <i class="bi bi-list sidebar-toggle d-md-none" @onclick="ToggleSidebar"></i>
-                </div>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar @(isSidebarCollapsed ? "collapsed" : "expanded")">
+        <div class="sidebar-header">
+            <h5 class="text-pink" style="white-space: nowrap;">@(isSidebarCollapsed ? "H" : "HMS")</h5>
+            <button class="toggle-btn d-none d-md-block" @onclick="ToggleSidebar">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
 
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-secondary border-bottom m-2" href="/booking">Booking</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-secondary border-bottom m-2" href="/guest">Guest</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-secondary border-bottom m-2" href="/room">Room</NavLink>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="@(isSidebarVisible ? "col-md-10 col-12" : "col-12") px-4">
-            <!-- Top bar with hamburger menu (always visible on mobile, optional on desktop) -->
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <button class="btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
-                    <i class="bi bi-list fs-3 text-pink"></i>
-                </button>
-
-                <!-- Desktop toggle button (optional) -->
-                <button class="btn d-none d-md-inline-block" @onclick="ToggleSidebar">
-                    <i class="bi bi-list text-pink fs-4"></i>
-                </button>
-            </div>
-
-            <article>
-                <div class="py-2">@Body</div>
-            </article>
-        </main>
+        <ul class="nav flex-column px-2">
+            <li class="nav-item my-1">
+                <NavLink class="nav-link text-secondary border-bottom text-danger" href="/booking">
+                    <i class="bi bi-journal-bookmark"></i> @(isSidebarCollapsed ? "" : " Booking")
+                </NavLink>
+            </li>
+            <li class="nav-item my-1">
+                <NavLink class="nav-link text-secondary border-bottom text-danger" href="/guest">
+                    <i class="bi bi-people"></i> @(isSidebarCollapsed ? "" : " Guest")
+                </NavLink>
+            </li>
+            <li class="nav-item my-1">
+                <NavLink class="nav-link text-secondary border-bottom text-danger" href="/room">
+                    <i class="bi bi-door-closed"></i> @(isSidebarCollapsed ? "" : " Room")
+                </NavLink>
+            </li>
+        </ul>
     </div>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1 px-4 py-2">
+        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+            <button class="btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                <i class="bi bi-list fs-4 text-pink"></i>
+            </button>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+        <article>
+            <div class="py-2">@Body</div>
+        </article>
+    </main>
 </div>
 
-<!-- Mobile Sidebar -->
-<div class="offcanvas offcanvas-start bg-white border-end border-2 border-secondary" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+<!-- Mobile Offcanvas Sidebar -->
+<div class="offcanvas offcanvas-start bg-white border-end border-2 border-secondary" tabindex="-1" id="mobileSidebar">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title text-pink" id="mobileSidebarLabel">HMS</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="text-pink">HMS</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <NavLink class="nav-link text-secondary border-bottom" href="/booking">Booking</NavLink>
+                <NavLink class="nav-link text-secondary border-bottom text-danger" href="/booking">Booking</NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link text-secondary border-bottom" href="/guest">Guest</NavLink>
+                <NavLink class="nav-link text-secondary border-bottom text-danger" href="/guest">Guest</NavLink>
             </li>
             <li class="nav-item">
-                <NavLink class="nav-link text-secondary border-bottom" href="/room">Room</NavLink>
+                <NavLink class="nav-link text-secondary border-bottom text-danger" href="/room">Room</NavLink>
             </li>
         </ul>
     </div>
