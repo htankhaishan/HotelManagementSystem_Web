@@ -1,5 +1,3 @@
-﻿<h3>AdminUser.razor</h3>
+﻿//<h3>AdminUser.razor</h3>
 
-@code {
-
-}
+//@code {}
