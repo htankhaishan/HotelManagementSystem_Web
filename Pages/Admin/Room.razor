@@ -1,4 +1,84 @@
 ﻿@page "/admin/room"
 @using HotelManagementSystem_Web.Layout.AdminLayout
 @layout AdminLayout
-<h3>room</h3>
+
+
+
+<!-- Add Booking Button -->
+<button class="btn btn-danger mb-3 me-2  " data-bs-toggle="modal" data-bs-target="#addBookingModal">
+    Add Booking
+</button>
+
+
+<table class="table table-sm table-bordered align-middle mt-5">
+    <thead style="background-color: #ffe6e6;">
+        <tr>
+            <th>RoomId</th>
+            <th>Room_No</th>
+            <th>RoomTypeId</th>
+            <th>Room Status</th>
+            <th>Image</th>
+            <th>Guest Limit</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in roomList) 
+        {
+            <tr>
+                <td>@room.RoomId</td>       
+                <td>@room.Room_No</td>
+                <td>@room.RoomTypeId</td>
+                <td>@room.RoomStatus</td>
+                <td><img src="@room.Image" alt="Room Image" style="width: 50px; height: 50px;" /></td>
+                <td>@room.GuestLimit</td>
+                <td>@room.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@room.UpdatedAt.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    public class TblRoom
+    {
+        public int RoomId { get; set; }
+        public string Room_No { get; set; }
+        public int RoomTypeId { get; set; }
+        public string RoomStatus { get; set; }
+        public string Image { get; set; }
+        public int GuestLimit { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    private List<TblRoom> roomList;
+
+    protected override void OnInitialized()
+    {
+        roomList = new List<TblRoom>
+        {
+            new TblRoom {
+                RoomId = 1,
+                Room_No = "A101",
+                RoomTypeId = 1,
+                RoomStatus = "Available",
+                Image = "images/room1.jpg", 
+                GuestLimit = 2,
+                CreatedAt = DateTime.Now.AddDays(-10),
+                UpdatedAt = DateTime.Now
+            },
+            new TblRoom {
+                RoomId = 2,
+                Room_No = "A102",
+                RoomTypeId = 2,
+                RoomStatus = "Occupied",
+                Image = "images/room2.jpg",
+                GuestLimit = 3,
+                CreatedAt = DateTime.Now.AddDays(-5),
+                UpdatedAt = DateTime.Now
+            }
+        };
+    }
+}
